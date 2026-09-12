@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GunjanCore - Job Portal & Placement Preparation Platform</title>
+  <meta name="description" content="GunjanCore - All-in-one platform featuring Job Portal, Topic-wise DSA Sheet, Aptitude/Technical/HR Prep, and Company Hiring Process Insights." />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white transition-colors duration-200">
+
+  <!-- Fixed Top Navigation Bar -->
+  <header class="sticky top-0 z-40 w-full glass-nav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 gap-4">
+        
+        <!-- Logo & Branding -->
+        <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.reload()">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 font-black text-white text-sm">
+            GC
+          </div>
+          <div>
+            <span class="text-lg font-black tracking-tight bg-gradient-to-r from-white via-indigo-200 to-indigo-400 bg-clip-text text-transparent">
+              GunjanCore
+            </span>
+            <span class="hidden sm:inline-block ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 uppercase tracking-widest">
+              Pro
+            </span>
+          </div>
+        </div>
+
+        <!-- Center: Desktop Navigation Tabs -->
+        <nav class="hidden lg:flex items-center gap-1.5">
+          <button class="nav-tab-btn px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 border border-transparent transition" data-tab="jobs">
+            <i data-lucide="briefcase" class="w-4 h-4"></i>
+            <span>Jobs</span>
+          </button>
+
+          <button class="nav-tab-btn px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 border border-transparent transition" data-tab="tracker">
+            <i data-lucide="trello" class="w-4 h-4"></i>
+            <span>Tracker</span>
+            <span id="nav-tracker-badge" class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300">0</span>
+          </button>
+
+          <button class="nav-tab-btn px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 border border-transparent transition" data-tab="dsa">
+            <i data-lucide="code" class="w-4 h-4"></i>
+            <span>DSA Sheet</span>
+            <span id="nav-dsa-badge" class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 font-mono">0%</span>
+          </button>
+
+          <button class="nav-tab-btn px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 border border-transparent transition" data-tab="prep">
+            <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+            <span>Prep Hub</span>
+          </button>
+
+          <button class="nav-tab-btn px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 border border-transparent transition" data-tab="companies">
+            <i data-lucide="building" class="w-4 h-4"></i>
+            <span>Company Guides</span>
+          </button>
+        </nav>
+
+        <!-- Right: Search, Theme Toggle, Google Sign-in & Mobile Hamburger -->
+        <div class="flex items-center gap-2.5">
+          <!-- Spotlight Search Trigger -->
+          <button class="open-universal-search-trigger px-3 py-1.5 rounded-xl bg-slate-900/80 border border-slate-700/70 hover:border-indigo-500 text-slate-400 hover:text-slate-200 text-xs flex items-center gap-2 transition shadow-inner">
+            <i data-lucide="search" class="w-3.5 h-3.5"></i>
+            <span class="hidden xl:inline">Search...</span>
+            <kbd class="hidden md:inline-block px-1.5 py-0.5 text-[10px] font-mono rounded bg-slate-800 border border-slate-700 text-slate-400">Ctrl K</kbd>
+          </button>
+
+          <!-- Prominent Light / Dark Mode Switcher -->
+          <button 
+            id="theme-toggle-btn" 
+            class="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-indigo-500/60 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition shadow-sm" 
+            title="Toggle between Light and Dark mode"
+          >
+            <i id="theme-icon" data-lucide="sun" class="w-4 h-4 text-amber-400"></i>
+            <span id="theme-text" class="hidden sm:inline text-[11px]">Dark</span>
+          </button>
+
+          <!-- Google Sign-In Container (Populated by app.js) -->
+          <div id="auth-nav-container">
+            <!-- Rendered dynamically: Google sign-in button OR Logged-in profile badge -->
+          </div>
+
+          <!-- Mobile Menu Hamburger -->
+          <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-400 hover:text-white">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-nav-menu" class="lg:hidden hidden border-b border-slate-800 bg-slate-950/95 px-4 py-3 space-y-2">
+      <button class="nav-tab-btn w-full p-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 border border-transparent text-left" data-tab="jobs">
+        <i data-lucide="briefcase" class="w-4 h-4"></i>
+        <span>Job Portal</span>
+      </button>
+      <button class="nav-tab-btn w-full p-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 border border-transparent text-left" data-tab="tracker">
+        <i data-lucide="trello" class="w-4 h-4"></i>
+        <span>Application Tracker</span>
+      </button>
+      <button class="nav-tab-btn w-full p-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 border border-transparent text-left" data-tab="dsa">
+        <i data-lucide="code" class="w-4 h-4"></i>
+        <span>Dedicated DSA Sheet</span>
+      </button>
+      <button class="nav-tab-btn w-full p-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 border border-transparent text-left" data-tab="prep">
+        <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+        <span>Prep Hub (Aptitude, Tech, HR)</span>
+      </button>
+      <button class="nav-tab-btn w-full p-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 border border-transparent text-left" data-tab="companies">
+        <i data-lucide="building" class="w-4 h-4"></i>
+        <span>Company Hiring Guides</span>
+      </button>
+
+      <!-- Mobile Theme Toggle -->
+      <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+        <span class="text-xs text-slate-400 font-medium">Appearance:</span>
+        <button id="mobile-theme-toggle" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs font-semibold text-slate-200 flex items-center gap-2">
+          <i data-lucide="sun" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Toggle Light/Dark</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <div id="app-main-content">
+      <!-- Injected Dynamically by Router -->
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-8 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-5 h-5 rounded bg-indigo-600 flex items-center justify-center text-white text-[10px] font-bold">GC</div>
+        <span class="font-medium text-slate-400">GunjanCore Platform &copy; 2026</span>
+      </div>
+      <div class="flex items-center gap-4 text-xs">
+        <span class="hover:text-slate-300 transition cursor-pointer" onclick="store.setActiveTab('jobs')">Browse Jobs</span>
+        <span>•</span>
+        <span class="hover:text-slate-300 transition cursor-pointer" onclick="store.setActiveTab('dsa')">DSA Sheet</span>
+        <span>•</span>
+        <span class="hover:text-slate-300 transition cursor-pointer" onclick="store.setActiveTab('prep')">Placement Notes</span>
+        <span>•</span>
+        <span class="hover:text-slate-300 transition cursor-pointer" onclick="store.setActiveTab('companies')">Company Blueprints</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Global Modal Outlet -->
+  <div id="global-modal-container"></div>
+
+  <!-- Universal Search Modal (Ctrl + K) -->
+  <div id="universal-search-modal" class="hidden fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 p-4 modal-backdrop animate-fade-in">
+    <div class="relative w-full max-w-2xl rounded-2xl bg-slate-900 border border-slate-700 shadow-2xl overflow-hidden flex flex-col">
+      <div class="p-4 border-b border-slate-800 bg-slate-950 flex items-center gap-3">
+        <i data-lucide="search" class="w-5 h-5 text-indigo-400 shrink-0"></i>
+        <input 
+          type="text" 
+          id="universal-search-input"
+          placeholder="Search jobs, DSA topics, company hiring patterns, CS notes..."
+          class="w-full bg-transparent text-sm text-slate-100 placeholder-slate-400 focus:outline-none"
+        />
+        <button id="close-search-modal" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <kbd class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700">ESC</kbd>
+        </button>
+      </div>
+
+      <div id="universal-search-results" class="p-2">
+        <!-- Results rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notifications -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Main ES Module Application Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
